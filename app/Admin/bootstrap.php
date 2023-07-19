@@ -24,4 +24,5 @@ use Dcat\Admin\Show;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+app('view')->prependNamespace('admin', resource_path('views/admin'));
 Dcat\Admin\Form::extend('newTimeRange', \App\Admin\Form\Field\NewTimeRange::class);

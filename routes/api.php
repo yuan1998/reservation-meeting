@@ -23,6 +23,7 @@ Route::group([
     Route::get('/reservation/can-create', [ReservationMeetingController::class, 'canCreate']);
     Route::get('/reservation/first', [ReservationMeetingController::class, 'first']);
     Route::post('/reservation', [ReservationMeetingController::class, 'store']);
+    Route::post('/reservation/cancel', [ReservationMeetingController::class, 'cancel']);
     Route::post('/reservation/end', [ReservationMeetingController::class, 'endMeeting']);
 });
 Route::post('/reservation/end/image', [ReservationMeetingController::class, 'saveImage']);

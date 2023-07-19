@@ -20,7 +20,7 @@ class ReservationMeetingController extends Controller
         $query = ReservationMeeting::query()
             ->with(['room'])
             ->orderBy('status')
-            ->orderBy('date','desc')
+            ->orderBy('date', 'desc')
             ->orderBy('start');
 
         if ($date) {
@@ -113,13 +113,14 @@ class ReservationMeetingController extends Controller
             ]);
     }
 
-    public function first(Request $request) {
+    public function first(Request $request)
+    {
         $id = $request->user()->id;
         $first = ReservationMeeting::query()
             ->with(['room'])
             ->where('user_id', $id)
             ->where('status', 1)
-            ->orderBy('date','desc')
+            ->orderBy('date', 'desc')
             ->orderBy('start')
             ->first();
 
@@ -153,8 +154,38 @@ class ReservationMeetingController extends Controller
             ->where('id', $data['id'])
             ->update($data);
 
+        $date = $request->get('date');
+        $roomId = $request->get('room_id');
+        if ($date && $roomId) {
+            ReservationMeeting::cleanCacheTime($roomId, $date);
+        }
+
         return self::okResponse($r);
 
+    }
+
+    public function cancel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:reservation_meetings,id',
+        ]);
+        if ($validator->fails()) {
+            return self::validateErrorResponse($validator);
+        }
+        $r = ReservationMeeting::query()
+            ->where('id', $request->get('id'))
+            ->update([
+                'status' => 3
+            ]);
+
+
+        $date = $request->get('date');
+        $roomId = $request->get('room_id');
+        if ($date && $roomId) {
+            ReservationMeeting::cleanCacheTime($roomId, $date);
+        }
+
+        return self::okResponse($r);
     }
 
     public function detail(Request $request)

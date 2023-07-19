@@ -44,6 +44,14 @@ class ReservationMeeting extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public static function cleanCacheTime($id,$date) {
+        $key = "$id-$date-earliest";
+        $key1 = "$id-$date-latest";
+
+        Cache::delete($key);
+        Cache::delete($key1);
+    }
+
     public static function getDateCacheTime($id, $date, $type = 'earliest')
     {
         $key = "$id-$date-$type";

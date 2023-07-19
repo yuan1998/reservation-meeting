@@ -104,4 +104,22 @@ class WeChatController extends Controller
             'data' => Arr::only($user->toArray(), ['id', 'name', 'phone', "avatar", "nike_name", "language", "province", "country", "city", "gender"])
         ]);
     }
+
+    public function messageTest(Request $request) {
+        $id = $request->get('id');
+        if (!$id) return;
+        $user = User::find($id);
+        if (!$user) return;
+
+        $app = app('easywechat.mini_app');
+        $r = $app->getClient()->postJson('wxa/business/getuserphonenumber', [
+            'touser' => $user->openid,
+            'msgtype' => 'text',
+            "text" => [
+                'content' => "Honestly is always the best policy"
+            ]
+        ]);
+        $result = json_decode($r->getContent(), true);
+        dd($result);
+    }
 }

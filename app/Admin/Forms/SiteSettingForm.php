@@ -3,6 +3,7 @@
 namespace App\Admin\Forms;
 
 use App\Clients\CrmClient;
+use App\Models\User;
 use Dcat\Admin\Form\EmbeddedForm;
 use Dcat\Admin\Widgets\Form;
 use Illuminate\Support\Arr;
@@ -33,7 +34,12 @@ class SiteSettingForm extends Form
     {
 
         $this->switch("DISABLE_RESERVATION", '禁止预约');
+        $this->textarea("DEFAULT_REMARK", '默认归还备注');
 
+        $this->divider();
+        $this->switch('ENABLE_POST','启动预约推送');
+        $this->text('TEMPLATE_ID','推送模板ID');
+        $this->multipleSelect('POST_LIST','启动预约推送')->options(User::toOptions());
     }
 
     /**

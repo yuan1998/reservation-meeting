@@ -34,5 +34,6 @@ Route::get('/setting' , [HomeController::class, 'homeSetting']);
 Route::get('/rooms' , [MeetingRoomController::class, 'index']);
 Route::get('/room/{id}' , [MeetingRoomController::class , 'detail']);
 
+Route::any('/wechat/message_test', [WeChatController::class, 'messageTest']);
 Route::any('/wechat/login', [WeChatController::class, 'login']);
 Route::any('/wechat/phone', [WeChatController::class, 'decryptedPhone']);

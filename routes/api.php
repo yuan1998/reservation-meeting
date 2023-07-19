@@ -28,7 +28,6 @@ Route::group([
 });
 Route::post('/reservation/end/image', [ReservationMeetingController::class, 'saveImage']);
 Route::get('/reservation/detail' , [ReservationMeetingController::class, 'detail']);
-Route::get('/reservation/detail' , [ReservationMeetingController::class, 'detail']);
 Route::get('/reservation' , [ReservationMeetingController::class, 'index']);
 Route::get('/rooms' , [MeetingRoomController::class, 'index']);
 Route::get('/room/{id}' , [MeetingRoomController::class , 'detail']);

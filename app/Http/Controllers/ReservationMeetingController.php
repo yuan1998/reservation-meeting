@@ -17,6 +17,7 @@ class ReservationMeetingController extends Controller
         $date = $request->get('date');
         $roomId = $request->get('room_id');
         $userId = $request->get('user_id');
+        $status = $request->get('status');
         $query = ReservationMeeting::query()
             ->with(['room'])
             ->orderBy('status')
@@ -27,8 +28,12 @@ class ReservationMeetingController extends Controller
             $query->whereDate('date', $date);
         }
         if ($userId) {
-            $query->where('user_id', $userId)
-                ->where('status', '<>', 0);
+            $query->where('user_id', $userId);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        } else {
+            $query->where('status', '<>', 0);
         }
         if ($roomId)
             $query->where('room_id', $roomId);

@@ -13,9 +13,9 @@ class ReservationMeeting extends Model
     use HasFactory, HasDateTimeFormatter;
 
     const STATUS_LIST = [
-        0=> '审核',
-        1=> '预约成功',
-        2=> '会议结束',
+        0 => '审核',
+        1 => '预约成功',
+        2 => '会议结束',
     ];
 
     protected $fillable = [
@@ -44,7 +44,8 @@ class ReservationMeeting extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function cleanCacheTime($id,$date) {
+    public static function cleanCacheTime($id, $date)
+    {
         $key = "$id-$date-earliest";
         $key1 = "$id-$date-latest";
 
@@ -54,24 +55,25 @@ class ReservationMeeting extends Model
 
     public static function getDateCacheTime($id, $date, $type = 'earliest')
     {
-        $key = "$id-$date-$type";
-        $time = Cache::get($key);
-        if (!$time) {
-            $query = ReservationMeeting::query()
-                ->where('room_id', $id)
-                ->whereDate('date', $date);
-            if ($type === 'earliest') {
-                $query->orderBy('start');
-            } else {
-                $query->orderBy('end', 'desc');
-            }
-
-            $item = $query->first();
-            if ($item) {
-                $time = $type === 'earliest' ? $item->start : $item->end;
-                Cache::put($key, "$date $time", Carbon::parse($date)->addDays(15));
-            }
+//        $key = "$id-$date-$type";
+//        $time = Cache::get($key);
+//        if (!$time) {
+        $query = ReservationMeeting::query()
+            ->where('room_id', $id)
+            ->whereDate('date', $date)
+            ->where('status', 1);
+        if ($type === 'earliest') {
+            $query->orderBy('start');
+        } else {
+            $query->orderBy('end', 'desc');
         }
+
+        $item = $query->first();
+//            if ($item) {
+        $time = $type === 'earliest' ? $item->start : $item->end;
+//                Cache::put($key, "$date $time", Carbon::parse($date)->addDays(15));
+//            }
+//        }
 
         return $time;
     }

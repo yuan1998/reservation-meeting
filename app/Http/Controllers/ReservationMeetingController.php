@@ -157,11 +157,6 @@ class ReservationMeetingController extends Controller
             ->where('id', $data['id'])
             ->update($data);
 
-        $date = $request->get('date');
-        $roomId = $request->get('room_id');
-        if ($date && $roomId) {
-            ReservationMeeting::cleanCacheTime($roomId, $date);
-        }
 
         return self::okResponse($r);
 
@@ -180,13 +175,6 @@ class ReservationMeetingController extends Controller
             ->update([
                 'status' => 3
             ]);
-
-
-        $date = $request->get('date');
-        $roomId = $request->get('room_id');
-        if ($date && $roomId) {
-            ReservationMeeting::cleanCacheTime($roomId, $date);
-        }
 
         return self::okResponse($r);
     }

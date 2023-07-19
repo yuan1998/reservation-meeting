@@ -112,7 +112,7 @@ class WeChatController extends Controller
         if (!$user) return;
 
         $app = app('easywechat.mini_app');
-        $r = $app->getClient()->postJson('wxa/business/getuserphonenumber', [
+        $r = $app->getClient()->postJson('cgi-bin/message/custom/send', [
             'touser' => $user->openid,
             'msgtype' => 'text',
             "text" => [

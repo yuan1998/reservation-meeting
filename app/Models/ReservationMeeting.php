@@ -69,8 +69,9 @@ class ReservationMeeting extends Model
         }
 
         $item = $query->first();
+        return $item ? $type === 'earliest' ? $item->start : $item->end : null;
 //            if ($item) {
-        $time = $type === 'earliest' ? $item->start : $item->end;
+//        $time = ;
 //                Cache::put($key, "$date $time", Carbon::parse($date)->addDays(15));
 //            }
 //        }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Forms\SiteSettingForm;
 use App\Admin\Metrics\Examples;
 use App\Http\Controllers\Controller;
 use Dcat\Admin\Admin;
@@ -9,9 +10,18 @@ use Dcat\Admin\Http\Controllers\Dashboard;
 use Dcat\Admin\Layout\Column;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Widgets\Card;
 
 class HomeController extends Controller
 {
+
+    public function setting(Content $content): Content
+    {
+        return $content
+            ->header('系统配置')
+            ->body(new Card(new SiteSettingForm()));
+    }
+
     public function index(Content $content)
     {
         return $content

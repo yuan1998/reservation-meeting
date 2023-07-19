@@ -38,11 +38,10 @@ class ReservationMeetingController extends Controller
         if ($roomId)
             $query->where('room_id', $roomId);
 
-        $data = $query->paginate(20)->through(function ($item) {
-            if ($item['close_image'])
-                $item['close_image'] = Storage::disk('public')->url($item['close_image']);
-            return $item;
-        });
+        if ($request->get('page'))
+            $data = $query->paginate(20);
+        else
+            $data = $query->get();
 
         return response()
             ->json([
@@ -108,7 +107,6 @@ class ReservationMeetingController extends Controller
             $user->phone = $data['person_phone'];
             $user->save();
         }
-
 
         return response()
             ->json([

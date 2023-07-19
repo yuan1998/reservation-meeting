@@ -16,5 +16,10 @@ class HomeController extends Controller
 
     }
 
+    public function homeSetting()
+    {
+        return self::okResponse(admin_setting()->toArray());
+    }
+
 
 }

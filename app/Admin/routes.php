@@ -13,6 +13,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
+    $router->get('/setting', 'HomeController@setting');
     $router->resource('customer_users', 'UserController');
     $router->resource('meeting_rooms', 'MeetingRoomController');
     $router->resource('reservation_meetings', 'ReservationMeetingController');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MeetingRoomController;
 use App\Http\Controllers\ReservationMeetingController;
 use App\Http\Controllers\WeChatController;
@@ -29,6 +30,7 @@ Route::group([
 Route::post('/reservation/end/image', [ReservationMeetingController::class, 'saveImage']);
 Route::get('/reservation/detail' , [ReservationMeetingController::class, 'detail']);
 Route::get('/reservation' , [ReservationMeetingController::class, 'index']);
+Route::get('/setting' , [HomeController::class, 'homeSetting']);
 Route::get('/rooms' , [MeetingRoomController::class, 'index']);
 Route::get('/room/{id}' , [MeetingRoomController::class , 'detail']);
 

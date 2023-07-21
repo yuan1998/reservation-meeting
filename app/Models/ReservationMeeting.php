@@ -16,6 +16,7 @@ class ReservationMeeting extends Model
         0 => '审核',
         1 => '预约成功',
         2 => '会议结束',
+        3 => '会议取消',
     ];
 
     protected $fillable = [

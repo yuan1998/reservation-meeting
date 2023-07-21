@@ -35,11 +35,11 @@ class SiteSettingForm extends Form
 
         $this->switch("DISABLE_RESERVATION", '禁止预约');
         $this->textarea("DEFAULT_REMARK", '默认归还备注');
+        $this->number('RESERVATION_MAX', '最大预约数量(0表示不限制)')->default(0)->min(0);
 
         $this->divider();
-        $this->switch('ENABLE_POST','启动预约推送');
-        $this->text('TEMPLATE_ID','推送模板ID');
-        $this->multipleSelect('POST_LIST','启动预约推送')->options(User::toOptions());
+        $this->switch('ENABLE_POST', '启动预约推送');
+        $this->text('DINGDING_ROBOT', '钉钉机器人webhook');
     }
 
     /**

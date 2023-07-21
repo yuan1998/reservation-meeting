@@ -18,7 +18,8 @@ class HomeController extends Controller
 
     public function homeSetting()
     {
-        return self::okResponse(admin_setting()->toArray());
+        return self::okResponse(collect(admin_setting())->only(["DISABLE_RESERVATION",
+            "DEFAULT_REMARK"]));
     }
 
 

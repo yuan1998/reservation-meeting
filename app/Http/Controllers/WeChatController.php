@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ReservationMeeting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -105,21 +106,12 @@ class WeChatController extends Controller
         ]);
     }
 
-    public function messageTest(Request $request) {
-        $id = $request->get('id');
-        if (!$id) return;
-        $user = User::find($id);
-        if (!$user) return;
-
-        $app = app('easywechat.mini_app');
-        $r = $app->getClient()->postJson('cgi-bin/message/custom/send', [
-            'touser' => $user->openid,
-            'msgtype' => 'text',
-            "text" => [
-                'content' => "Honestly is always the best policy"
-            ]
-        ]);
-        $result = json_decode($r->getContent(), true);
-        dd($result);
+    public function messageTest(Request $request)
+    {
+        $m = ReservationMeeting::query()->first();
+        if($m) {
+            $r = $m->generateMarkdownMessageAndSend();
+            dd($r);
+        }
     }
 }

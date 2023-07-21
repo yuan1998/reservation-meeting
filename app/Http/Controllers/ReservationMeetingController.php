@@ -107,6 +107,8 @@ class ReservationMeetingController extends Controller
             $user->phone = $data['person_phone'];
             $user->save();
         }
+        if ($model)
+            $model->generateMarkdownMessageAndSend();
 
         return response()
             ->json([
@@ -132,13 +134,16 @@ class ReservationMeetingController extends Controller
 
     public function canCreate(Request $request)
     {
+        if (!$max = (int)admin_setting('RESERVATION_MAX'))
+            return self::okResponse(true);
+
         $id = $request->user()->id;
-        $exists = ReservationMeeting::query()
+        $count = ReservationMeeting::query()
             ->where('user_id', $id)
             ->where('status', 1)
-            ->exists();
+            ->count();
 
-        return self::okResponse(!$exists);
+        return self::okResponse($count < $max);
     }
 
     public function endMeeting(Request $request)

@@ -44,13 +44,61 @@ class ReservationMeeting extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function cleanCacheTime($id, $date)
+    public function generateMarkdownMessageAndSend()
     {
-        $key = "$id-$date-earliest";
-        $key1 = "$id-$date-latest";
+        try {
+            $room = $this->room;
+            $name = $this->person_name;
+            $date = substr($this->date, 0, 10);
+            $start = $this->start;
+            $end = $this->end;
+            $msg = "## {$room->title}\n> 预约人: {$name}\n> 预约时间: {$date} {$start} ~ {$end}\n##### 喵~";
+            return static::postReservationMessage([
+                'msgtype' => 'markdown',
+                'markdown' => [
+                    'title' => $room->title,
+                    "text" => $msg
+                ]
+            ]);
+        } catch (\Exception $exception) {
 
-        Cache::delete($key);
-        Cache::delete($key1);
+        }
+    }
+
+    public static function postReservationMessage($data)
+    {
+        if (!admin_setting('ENABLE_POST')) return;
+        if (!$hook = admin_setting('DINGDING_ROBOT')) return;
+
+        if (is_string($data)) {
+            $data = [
+                'msgtype' => 'text',
+                "text" => [
+                    'content' => "$data 喵~"
+                ]
+            ];
+        }
+
+        $data_string = json_encode($data);
+
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $hook);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=utf-8'));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // 线下环境不用开启curl证书验证, 未调通情况可尝试添加该代码
+            // curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            // curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            return $data;
+
+        } catch (\Exception $exception) {
+            return;
+        }
     }
 
     public static function getDateCacheTime($id, $date, $type = 'earliest')

@@ -118,7 +118,7 @@ class ReservationMeeting extends Model
         }
 
         $item = $query->first();
-        return $item ? $type === 'earliest' ? $item->start : $item->end : null;
+        return $item ? ($type === 'earliest' ? $item->start : $item->end) : null;
 //            if ($item) {
 //        $time = ;
 //                Cache::put($key, "$date $time", Carbon::parse($date)->addDays(15));
@@ -130,19 +130,26 @@ class ReservationMeeting extends Model
 
     public static function checkCurrentDateIsValid($id, $date, $start, $end)
     {
-        $earliest = self::getDateCacheTime($id, $date);
-        $latest = self::getDateCacheTime($id, $date, 'latest');
-        if (!$earliest && !$latest)
-            return true;
-
         $start = Carbon::parse("$date $start");
         $end = Carbon::parse("$date $end");
-
         if ($end->lte($start))
             return false;
 
-        if (($end->gt($earliest) && $start->lt($latest)) || ($start->eq($earliest) && $end->eq($latest)))
-            return false;
+        $data = ReservationMeeting::query()
+            ->where('room_id', $id)
+            ->whereDate('date', $date)
+            ->where('status', 1)
+            ->get();
+        if(!count($data))
+            return true;
+
+        foreach ($data as $item) {
+            $earliest = "{$date} {$item->start}";
+            $latest = "{$date} {$item->end}";
+            if(($end->gt($earliest) && $start->lt($latest)) || ($start->eq($earliest) && $end->eq($latest)) )
+                return false;
+
+        }
         return true;
     }
 

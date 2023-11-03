@@ -31,6 +31,7 @@ Route::post('/reservation/end/image', [ReservationMeetingController::class, 'sav
 Route::get('/reservation/detail' , [ReservationMeetingController::class, 'detail']);
 Route::get('/reservation' , [ReservationMeetingController::class, 'index']);
 Route::get('/setting' , [HomeController::class, 'homeSetting']);
+Route::get('/send/carNo' , [HomeController::class, 'sendCarNo']);
 Route::get('/rooms' , [MeetingRoomController::class, 'index']);
 Route::get('/room/{id}' , [MeetingRoomController::class , 'detail']);
 

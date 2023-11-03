@@ -66,11 +66,8 @@ class ReservationMeeting extends Model
         }
     }
 
-    public static function postReservationMessage($data)
+    public static function postToDingDingMessage($hook, $data)
     {
-        if (!admin_setting('ENABLE_POST')) return;
-        if (!$hook = admin_setting('DINGDING_ROBOT')) return;
-
         if (is_string($data)) {
             $data = [
                 'msgtype' => 'text',
@@ -100,6 +97,14 @@ class ReservationMeeting extends Model
         } catch (\Exception $exception) {
             return;
         }
+    }
+
+    public static function postReservationMessage($data)
+    {
+        if (!admin_setting('ENABLE_POST')) return;
+        if (!$hook = admin_setting('DINGDING_ROBOT')) return;
+        self::postToDingDingMessage($hook, $data);
+
     }
 
     public static function getDateCacheTime($id, $date, $type = 'earliest')
@@ -140,13 +145,13 @@ class ReservationMeeting extends Model
             ->whereDate('date', $date)
             ->where('status', 1)
             ->get();
-        if(!count($data))
+        if (!count($data))
             return true;
 
         foreach ($data as $item) {
             $earliest = "{$date} {$item->start}";
             $latest = "{$date} {$item->end}";
-            if(($end->gt($earliest) && $start->lt($latest)) || ($start->eq($earliest) && $end->eq($latest)) )
+            if (($end->gt($earliest) && $start->lt($latest)) || ($start->eq($earliest) && $end->eq($latest)))
                 return false;
 
         }
